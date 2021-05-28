@@ -1,22 +1,23 @@
 package com.example.contacts;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewStub;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
     private ViewStub stubGrid;
@@ -25,8 +26,10 @@ public class MainActivity extends AppCompatActivity {
     private GridView gridView;
     private ListViewAdapter listViewAdapter;
     private GridViewAdapter gridViewAdapter;
-    private List<Person> personList;
+    private List<Person> personList = new ArrayList<>();
     private int currentViewMode = 0;
+    private final String[] name = {"Oleg", "Igor", "Sergey", "Mike", "Jack", "Tonny", "Nick", "Mark", "Luke"};
+    private final String[] surname = {"Storozhev", "Ivanov", "Sikorsky", "Tvist", "Green", "Tsivinskiy", "Melnik", "Vorotov", "Govologorov"};
 
     static final int VIEW_MODE_LISTVIEW = 0;
     static final int VIEW_MODE_GRIDVIEW = 1;
@@ -36,8 +39,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        stubList = (ViewStub) findViewById(R.id.stub_list);
-        stubGrid = (ViewStub) findViewById(R.id.stub_grid);
+        stubList = findViewById(R.id.stub_list);
+        stubGrid = findViewById(R.id.stub_grid);
 
         stubList.inflate();
         stubGrid.inflate();
@@ -53,6 +56,13 @@ public class MainActivity extends AppCompatActivity {
         listView.setOnItemClickListener(onItemClickListener);
         gridView.setOnItemClickListener(onItemClickListener);
 
+        Button btn1 = findViewById(R.id.random_button);
+        btn1.setOnClickListener(this :: RandomChanges);
+
+        switchView();
+    }
+    public void RandomChanges(View view){
+        getPersonList();
         switchView();
     }
 
@@ -78,20 +88,27 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public List<Person> getPersonList(){
-        personList = new ArrayList<>();
-        personList.add(new Person(R.drawable.avatar_icon, "Name 1", true));
-        personList.add(new Person(R.drawable.avatar_icon, "Name 2", true));
-        personList.add(new Person(R.drawable.avatar_icon, "Name 3", true));
-        personList.add(new Person(R.drawable.avatar_icon, "Name 4", true));
-        personList.add(new Person(R.drawable.avatar_icon, "Name 5", true));
-        personList.add(new Person(R.drawable.avatar_icon, "Name 6", true));
-        personList.add(new Person(R.drawable.avatar_icon, "Name 7", true));
-        personList.add(new Person(R.drawable.avatar_icon, "Name 8", true));
-        personList.add(new Person(R.drawable.avatar_icon, "Name 9", true));
-        personList.add(new Person(R.drawable.avatar_icon, "Name 10", true));
-        personList.add(new Person(R.drawable.avatar_icon, "Name 11", true));
-        personList.add(new Person(R.drawable.avatar_icon, "Name 12", true));
+        int random_int = (int)Math.floor(Math.random()*25+5); // from 5 to 46
+
+        if(!personList.isEmpty())
+            personList.clear();
+
+        for(int i = 0; i < random_int; i++)
+            personList.add(new Person(R.drawable.avatar_icon, randomFullName(), getRandomBoolean()));
+
         return personList;
+    }
+
+    public boolean getRandomBoolean() {
+        Random random = new Random();
+        return random.nextBoolean();
+    }
+
+    public String randomFullName(){
+        int first_name = (int) (Math.random()*9);
+        int second_name = (int) (Math.random()*9);
+        return name[first_name] + " " + surname[second_name];
+
     }
 
     AdapterView.OnItemClickListener onItemClickListener = new AdapterView.OnItemClickListener(){
