@@ -1,5 +1,6 @@
 package com.example.contacts;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
@@ -120,8 +121,14 @@ public class MainActivity extends AppCompatActivity {
     AdapterView.OnItemClickListener onItemClickListener = new AdapterView.OnItemClickListener(){
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id){
-            // do smthg
-            Toast.makeText(getApplicationContext(),personList.get(position).getImageID() + personList.get(position).getTitle() + " + " + personList.get(position).isOnline()+ " + " + personList.get(position).getEmail() + " + " + personList.get(position).getGender(), Toast.LENGTH_SHORT).show();
+//            Toast.makeText(getApplicationContext(),personList.get(position).getImageID() + personList.get(position).getTitle() + " + " + personList.get(position).isOnline()+ " + " + personList.get(position).getEmail() + " + " + personList.get(position).getGender(), Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(MainActivity.this, Detailed_Info.class);
+            intent.putExtra("image", personList.get(position).getImageID());
+            intent.putExtra("fullName", personList.get(position).getTitle());
+            intent.putExtra("online", personList.get(position).isOnline());
+            intent.putExtra("email", personList.get(position).getEmail());
+            intent.putExtra("gender", personList.get(position).getGender());
+            startActivity(intent);
         }
     };
 

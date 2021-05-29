@@ -10,6 +10,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Contacts">
         <activity
+            android:name=".Detailed_Info"
+            android:exported="true" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
