@@ -1,5 +1,6 @@
 package com.example.contacts;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
@@ -17,7 +18,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
     private ViewStub stubGrid;
@@ -26,11 +26,8 @@ public class MainActivity extends AppCompatActivity {
     private GridView gridView;
     private ListViewAdapter listViewAdapter;
     private GridViewAdapter gridViewAdapter;
-    private List<Person> personList = new ArrayList<>();
+    private final List<Person> personList = new ArrayList<>();
     private int currentViewMode = 0;
-    private final String[] name = {"Oleg", "Igor", "Sergey", "Mike", "Jack", "Tonny", "Nick", "Mark", "Luke"};
-    private final String[] surname = {"Storozhev", "Ivanov", "Sikorsky", "Tvist", "Green", "Tsivinskiy", "Melnik", "Vorotov", "Govologorov"};
-
     static final int VIEW_MODE_LISTVIEW = 0;
     static final int VIEW_MODE_GRIDVIEW = 1;
 
@@ -38,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        // setting everything
         stubList = findViewById(R.id.stub_list);
         stubGrid = findViewById(R.id.stub_grid);
 
@@ -48,20 +45,22 @@ public class MainActivity extends AppCompatActivity {
         listView = findViewById(R.id.listView);
         gridView = findViewById(R.id.gridView);
 
-        getPersonList();
+        getPersonList(); // make our 1st random list
 
         SharedPreferences sharedPreferences = getSharedPreferences("ViewMode", MODE_PRIVATE);
         currentViewMode = sharedPreferences.getInt("currentViewMode", VIEW_MODE_LISTVIEW);
-
+        // setting ClickListeners for our two views
         listView.setOnItemClickListener(onItemClickListener);
         gridView.setOnItemClickListener(onItemClickListener);
 
-        Button btn1 = findViewById(R.id.random_button);
+        Button btn1 = findViewById(R.id.random_button); // button for random changes
         btn1.setOnClickListener(this :: RandomChanges);
 
-        switchView();
+        switchView(); // show the results on the screen
     }
-    public void RandomChanges(View view){
+
+    public void RandomChanges(View view){  // do random changes and clear old
+        personList.clear();
         getPersonList();
         switchView();
     }
@@ -87,35 +86,49 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public List<Person> getPersonList(){
-        int random_int = (int)Math.floor(Math.random()*25+5); // from 5 to 46
-
-        if(!personList.isEmpty())
-            personList.clear();
-
+    private void getPersonList(){
+        int random_int = (int)Math.floor(Math.random()*25+5); // from 5 to 25
         for(int i = 0; i < random_int; i++)
-            personList.add(new Person(R.drawable.avatar_icon, randomFullName(), getRandomBoolean()));
-
-        return personList;
+            personList.add(addPerson());
     }
 
-    public boolean getRandomBoolean() {
-        Random random = new Random();
-        return random.nextBoolean();
-    }
+    public Person addPerson(){
+        final String gender = RandomPerson.getRandomGender();
+        final String name = RandomPerson.getRandomName(gender); // save random name for email and full name
+        final String surname = RandomPerson.getRandomSurname(); // save random surname for email and full name
 
-    public String randomFullName(){
-        int first_name = (int) (Math.random()*9);
-        int second_name = (int) (Math.random()*9);
-        return name[first_name] + " " + surname[second_name];
+        // create strings for more readable code to input it on the method
+        final boolean online = RandomPerson.getRandomOnline();
+        final String fullName = name + " " + surname;
+        final String email = name.toLowerCase() + '.' + surname.toLowerCase() + "@gmail.com";
+        final int imageID;
+        if(gender.equals("Female")) {
+            if(online){
+                imageID = R.drawable.icon_female_online;
+            } else
+                imageID = R.drawable.icon_female;
+        }
+        else {
+            if(online){
+                imageID = R.drawable.avatar_icon_online;
+            } else
+                imageID = R.drawable.avatar_icon;
+        }
 
+        return new Person(imageID, fullName, online, gender, email);
     }
 
     AdapterView.OnItemClickListener onItemClickListener = new AdapterView.OnItemClickListener(){
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id){
-            // do smthing
-            Toast.makeText(getApplicationContext(),personList.get(position).getTitle() + " + " + personList.get(position).isOnline(), Toast.LENGTH_SHORT).show();
+//            Toast.makeText(getApplicationContext(),personList.get(position).getImageID() + personList.get(position).getTitle() + " + " + personList.get(position).isOnline()+ " + " + personList.get(position).getEmail() + " + " + personList.get(position).getGender(), Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(MainActivity.this, Detailed_Info.class);
+            intent.putExtra("image", personList.get(position).getImageID());
+            intent.putExtra("fullName", personList.get(position).getTitle());
+            intent.putExtra("online", personList.get(position).isOnline());
+            intent.putExtra("email", personList.get(position).getEmail());
+            intent.putExtra("gender", personList.get(position).getGender());
+            startActivity(intent);
         }
     };
 
@@ -127,20 +140,18 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()){
-            case R.id.item_menu_1:
-                if(VIEW_MODE_LISTVIEW == currentViewMode){
-                    currentViewMode = VIEW_MODE_GRIDVIEW;
-                } else{
-                    currentViewMode = VIEW_MODE_LISTVIEW;
-                }
-                switchView();
+        if (item.getItemId() == R.id.item_menu_1) {
+            if (VIEW_MODE_LISTVIEW == currentViewMode) {
+                currentViewMode = VIEW_MODE_GRIDVIEW;
+            } else {
+                currentViewMode = VIEW_MODE_LISTVIEW;
+            }
+            switchView();
 
-                SharedPreferences sharedPreferences = getSharedPreferences("ViewMode", MODE_PRIVATE);
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putInt("currentViewMode", currentViewMode);
-                editor.commit();
-                break;
+            SharedPreferences sharedPreferences = getSharedPreferences("ViewMode", MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putInt("currentViewMode", currentViewMode);
+            editor.apply();
         }
         return true;
     }
