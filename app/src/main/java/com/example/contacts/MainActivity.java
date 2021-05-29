@@ -17,8 +17,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
-import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
     private ViewStub stubGrid;
@@ -29,11 +27,6 @@ public class MainActivity extends AppCompatActivity {
     private GridViewAdapter gridViewAdapter;
     private final List<Person> personList = new ArrayList<>();
     private int currentViewMode = 0;
-    // Random names list
-    private final String[] name_male = {"Oleg", "Igor", "Sergey", "Mike", "Jack", "Tonny", "Nick", "Mark", "Luke"};
-    private final String[] surname = {"Storozhev", "Ivanov", "Sikorsky", "Tvist", "Green", "Tsivinskiy", "Melnik", "Vorotov", "Govologorov"};
-    private final String[] gender = {"male", "female"};
-
     static final int VIEW_MODE_LISTVIEW = 0;
     static final int VIEW_MODE_GRIDVIEW = 1;
 
@@ -107,15 +100,28 @@ public class MainActivity extends AppCompatActivity {
         final boolean online = RandomPerson.getRandomOnline();
         final String fullName = name + " " + surname;
         final String email = name.toLowerCase() + '.' + surname.toLowerCase() + "@gmail.com";
+        final int imageID;
+        if(gender.equals("Female")) {
+            if(online){
+                imageID = R.drawable.icon_female_online;
+            } else
+                imageID = R.drawable.icon_female;
+        }
+        else {
+            if(online){
+                imageID = R.drawable.avatar_icon_online;
+            } else
+                imageID = R.drawable.avatar_icon;
+        }
 
-        return new Person(R.drawable.avatar_icon, fullName, online, gender, email);
+        return new Person(imageID, fullName, online, gender, email);
     }
 
     AdapterView.OnItemClickListener onItemClickListener = new AdapterView.OnItemClickListener(){
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id){
             // do smthg
-            Toast.makeText(getApplicationContext(),personList.get(position).getTitle() + " + " + personList.get(position).isOnline()+ " + " + personList.get(position).getEmail() + " + " + personList.get(position).getGender(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(),personList.get(position).getImageID() + personList.get(position).getTitle() + " + " + personList.get(position).isOnline()+ " + " + personList.get(position).getEmail() + " + " + personList.get(position).getGender(), Toast.LENGTH_SHORT).show();
         }
     };
 

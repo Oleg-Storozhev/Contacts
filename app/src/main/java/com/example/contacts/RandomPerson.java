@@ -16,7 +16,6 @@ public class RandomPerson {
             random = (int) (Math.random() * name_female.length);
             return name_female[random];
         }
-
     }
     public static String getRandomSurname(){
         int random = (int) (Math.random()*surname.length);
