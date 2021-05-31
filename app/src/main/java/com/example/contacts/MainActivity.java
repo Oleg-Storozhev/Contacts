@@ -10,15 +10,19 @@ import android.view.ViewStub;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.ListView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.squareup.picasso.Picasso;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
+    private ImageView imageView;
     private ViewStub stubGrid;
     private ViewStub stubList;
     private ListView listView;
@@ -43,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
 
         listView = findViewById(R.id.listView);
         gridView = findViewById(R.id.gridView);
+        imageView = findViewById(R.id.imageView);
 
         getPersonList(); // make our 1st random list
 
@@ -87,8 +92,9 @@ public class MainActivity extends AppCompatActivity {
 
     private void getPersonList(){
         int random_int = (int)Math.floor(Math.random()*25+5); // from 5 to 25
-        for(int i = 0; i < random_int; i++)
+        for(int i = 0; i < random_int; i++) {
             personList.add(addPerson());
+        }
     }
 
     public Person addPerson(){
@@ -101,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
         final String fullName = name + " " + surname;
         final String email = name.toLowerCase() + '.' + surname.toLowerCase() + "@gmail.com";
         final int imageID = RandomPerson.getAvatar(gender, online);
-
+//        gravatar(gender, online);
         return new Person(imageID, fullName, online, gender, email);
     }
 
@@ -142,8 +148,19 @@ public class MainActivity extends AppCompatActivity {
         }
         return true;
     }
-    public List<Person> getListPerson(){
-        getPersonList();
-        return personList;
+
+    public void gravatar(String gender, boolean online){
+        if(gender.equals("Female")) {
+            if(online)
+                Picasso.get().load("http://0.gravatar.com/userimage/191818386/29f18ba514817347c65adf82960edea1").into(imageView);
+            else
+                Picasso.get().load("http://2.gravatar.com/userimage/191818386/c9c9fa425c4b6e3d71a0123553b2d765").into(imageView);
+        }
+        else{
+            if(online)
+                Picasso.get().load("http://2.gravatar.com/userimage/191818386/a707fafe3a4054eab06526350e85e22c").into(imageView);
+            else
+                Picasso.get().load("http://2.gravatar.com/userimage/191818386/58a5a796907c746d3f698b3566197033").into(imageView);
+        }
     }
 }
