@@ -2,8 +2,10 @@ package com.example.contacts;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -50,5 +52,11 @@ public class Detailed_Info extends AppCompatActivity {
         ImageView avatar = findViewById(R.id.detailView);
         int setAvatar = (int) getIntent().getExtras().get("image");
         avatar.setImageResource(setAvatar);
+    }
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+        overridePendingTransition(R.anim.slide_in_right,R.anim.slide_in_right);
     }
 }

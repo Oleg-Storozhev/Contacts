@@ -3,6 +3,7 @@ package com.example.contacts;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -114,14 +115,18 @@ public class MainActivity extends AppCompatActivity {
     AdapterView.OnItemClickListener onItemClickListener = new AdapterView.OnItemClickListener(){
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id){
-//            Toast.makeText(getApplicationContext(),personList.get(position).getImageID() + personList.get(position).getTitle() + " + " + personList.get(position).isOnline()+ " + " + personList.get(position).getEmail() + " + " + personList.get(position).getGender(), Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(MainActivity.this, Detailed_Info.class);
-            intent.putExtra("image", personList.get(position).getImageID());
-            intent.putExtra("fullName", personList.get(position).getTitle());
-            intent.putExtra("online", personList.get(position).isOnline());
-            intent.putExtra("email", personList.get(position).getEmail());
-            intent.putExtra("gender", personList.get(position).getGender());
-            startActivity(intent);
+            new Handler().postDelayed(new Runnable() {
+                public void run() {
+                    Intent intent = new Intent(MainActivity.this, Detailed_Info.class);
+                    intent.putExtra("image", personList.get(position).getImageID());
+                    intent.putExtra("fullName", personList.get(position).getTitle());
+                    intent.putExtra("online", personList.get(position).isOnline());
+                    intent.putExtra("email", personList.get(position).getEmail());
+                    intent.putExtra("gender", personList.get(position).getGender());
+                    startActivity(intent);
+                    overridePendingTransition(R.anim.slide_in_left,R.anim.slide_in_left);
+                }
+            }, 300);
         }
     };
 
