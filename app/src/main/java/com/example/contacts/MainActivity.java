@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -48,7 +49,10 @@ public class MainActivity extends AppCompatActivity {
 
         listView = findViewById(R.id.listView);
         gridView = findViewById(R.id.gridView);
-        imageView = findViewById(R.id.imageView);
+
+        LayoutInflater inflater = getLayoutInflater();
+        View v = inflater.inflate(R.layout.list_item,null, false);
+        imageView = v.findViewById(R.id.imageView);
 
         getPersonList(); // make our 1st random list
 
@@ -108,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
         final String fullName = name + " " + surname;
         final String email = name.toLowerCase() + '.' + surname.toLowerCase() + "@gmail.com";
         final int imageID = RandomPerson.getAvatar(gender, online);
-//        gravatar(gender, online);
+        gravatar(gender, online);
         return new Person(imageID, fullName, online, gender, email);
     }
 
