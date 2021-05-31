@@ -11,7 +11,6 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -101,19 +100,7 @@ public class MainActivity extends AppCompatActivity {
         final boolean online = RandomPerson.getRandomOnline();
         final String fullName = name + " " + surname;
         final String email = name.toLowerCase() + '.' + surname.toLowerCase() + "@gmail.com";
-        final int imageID;
-        if(gender.equals("Female")) {
-            if(online){
-                imageID = R.drawable.icon_female_online;
-            } else
-                imageID = R.drawable.icon_female;
-        }
-        else {
-            if(online){
-                imageID = R.drawable.avatar_icon_online;
-            } else
-                imageID = R.drawable.avatar_icon;
-        }
+        final int imageID = RandomPerson.getAvatar(gender, online);
 
         return new Person(imageID, fullName, online, gender, email);
     }
@@ -154,5 +141,9 @@ public class MainActivity extends AppCompatActivity {
             editor.apply();
         }
         return true;
+    }
+    public List<Person> getListPerson(){
+        getPersonList();
+        return personList;
     }
 }

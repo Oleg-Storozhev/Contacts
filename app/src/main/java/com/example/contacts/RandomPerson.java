@@ -1,9 +1,11 @@
 package com.example.contacts;
 
+import java.util.Random;
+
 public class RandomPerson {
     private static final String[] name_male = {"Oleg", "Igor", "Sergey", "Mike", "Jack", "Tonny", "Nick", "Mark", "Luke"};
-    private static final String[] name_female = {"Anna", "Nataliya", "Masha", "Alexandra", "Tanya", "Sonya", "Jessica", "Vera", "Olga"};
-    private static final String[] surname = {"Storozhev", "Ivanov", "Sikorsky", "Tvist", "Green", "Tsivinskiy", "Melnik", "Vorotov", "Govologorov"};
+    private static final String[] name_female = {"Anna", "Nataliya", "Maria", "Alexandra", "Tanya", "Sonya", "Lera", "Vera", "Olga"};
+    private static final String[] surname = {"Storozhev", "Iliyashenko", "Lishenko", "Tvist", "Green", "Repnin", "Melnik", "Kulik", "Semchenko"};
     private static final String[] gender = {"Male", "Female"};
 
     public static String getRandomName(String gender){
@@ -26,7 +28,21 @@ public class RandomPerson {
         return gender[random];
     }
     public static boolean getRandomOnline(){
-        java.util.Random random = new java.util.Random();
+        Random random = new Random();
         return random.nextBoolean();
+    }
+    public static int getAvatar(String gender, boolean online){
+        if(gender.equals("Female")) {
+            if(online){
+                return R.drawable.icon_female_online;
+            }
+            return R.drawable.icon_female;
+        }
+        else {
+            if(online){
+                return R.drawable.avatar_icon_online;
+            }
+            return R.drawable.avatar_icon;
+        }
     }
 }
