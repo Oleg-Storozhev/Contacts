@@ -27,7 +27,6 @@ public class GridViewAdapter extends ArrayAdapter<Person> {
         }
         Person person = getItem(position);
         ImageView img = v.findViewById(R.id.imageView);
-
         img.setImageResource(person.getImageID());
 
         return v;

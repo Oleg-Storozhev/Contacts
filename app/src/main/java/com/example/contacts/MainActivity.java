@@ -1,8 +1,10 @@
 package com.example.contacts;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -36,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         // setting everything
@@ -47,7 +50,9 @@ public class MainActivity extends AppCompatActivity {
 
         listView = findViewById(R.id.listView);
         gridView = findViewById(R.id.gridView);
-        imageView = findViewById(R.id.imageView);
+        LayoutInflater inflater = getLayoutInflater();
+        View v = inflater.inflate(R.layout.list_item,null, false);
+        imageView = v.findViewById(R.id.imageView);
 
         getPersonList(); // make our 1st random list
 
@@ -107,14 +112,14 @@ public class MainActivity extends AppCompatActivity {
         final String fullName = name + " " + surname;
         final String email = name.toLowerCase() + '.' + surname.toLowerCase() + "@gmail.com";
         final int imageID = RandomPerson.getAvatar(gender, online);
-//        gravatar(gender, online);
+
+        gravatar(gender, online);
         return new Person(imageID, fullName, online, gender, email);
     }
 
     AdapterView.OnItemClickListener onItemClickListener = new AdapterView.OnItemClickListener(){
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id){
-//            Toast.makeText(getApplicationContext(),personList.get(position).getImageID() + personList.get(position).getTitle() + " + " + personList.get(position).isOnline()+ " + " + personList.get(position).getEmail() + " + " + personList.get(position).getGender(), Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(MainActivity.this, Detailed_Info.class);
             intent.putExtra("image", personList.get(position).getImageID());
             intent.putExtra("fullName", personList.get(position).getTitle());
