@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -50,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
 
         listView = findViewById(R.id.listView);
         gridView = findViewById(R.id.gridView);
+
         LayoutInflater inflater = getLayoutInflater();
         View v = inflater.inflate(R.layout.list_item,null, false);
         imageView = v.findViewById(R.id.imageView);
@@ -112,7 +114,6 @@ public class MainActivity extends AppCompatActivity {
         final String fullName = name + " " + surname;
         final String email = name.toLowerCase() + '.' + surname.toLowerCase() + "@gmail.com";
         final int imageID = RandomPerson.getAvatar(gender, online);
-
         gravatar(gender, online);
         return new Person(imageID, fullName, online, gender, email);
     }
@@ -120,13 +121,18 @@ public class MainActivity extends AppCompatActivity {
     AdapterView.OnItemClickListener onItemClickListener = new AdapterView.OnItemClickListener(){
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id){
-            Intent intent = new Intent(MainActivity.this, Detailed_Info.class);
-            intent.putExtra("image", personList.get(position).getImageID());
-            intent.putExtra("fullName", personList.get(position).getTitle());
-            intent.putExtra("online", personList.get(position).isOnline());
-            intent.putExtra("email", personList.get(position).getEmail());
-            intent.putExtra("gender", personList.get(position).getGender());
-            startActivity(intent);
+            new Handler().postDelayed(new Runnable() {
+                public void run() {
+                    Intent intent = new Intent(MainActivity.this, Detailed_Info.class);
+                    intent.putExtra("image", personList.get(position).getImageID());
+                    intent.putExtra("fullName", personList.get(position).getTitle());
+                    intent.putExtra("online", personList.get(position).isOnline());
+                    intent.putExtra("email", personList.get(position).getEmail());
+                    intent.putExtra("gender", personList.get(position).getGender());
+                    startActivity(intent);
+                    overridePendingTransition(R.anim.slide_in_left,R.anim.slide_in_left);
+                }
+            }, 300);
         }
     };
 
